@@ -1,7 +1,9 @@
 import authSchema from '../models/auth.models.js'
 import usersSchema from '../models/auth.models.js'
+import jtw from 'jsonwebtoken'
 
-const createUser = async (req,res) => {
+
+const createUser = async (req, res) => {
     try {
         const { name, username, email, password } = req.body
         if (!name || !username || !email || !password) {
@@ -16,10 +18,19 @@ const createUser = async (req,res) => {
             email: req.body.email,
             password: req.body.password
         })
+
+        const token = jtw.sign({
+            id: newUser._id,
+        }, process.env.JWT_SECRET)
+
+        res.cookie("token", token)
+
         res.status(201).json({
             message: "User created successfully!",
-            user: newUser
+            user: newUser,
         })
+
+
 
     } catch (error) {
         console.log("error in creating users", error);
@@ -28,4 +39,6 @@ const createUser = async (req,res) => {
         })
     }
 }
+
+
 export { createUser } 
