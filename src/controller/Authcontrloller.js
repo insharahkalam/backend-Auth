@@ -22,8 +22,8 @@ const createUser = async (req, res) => {
                 message: "your name must be greater than 4 charachters."
             })
         }
-        console.log('------>',req.body);
-        
+        console.log('------>', req.body);
+
         const newUser = await authSchema.create({
             name: req.body.name,
             username: req.body.username,
@@ -31,11 +31,15 @@ const createUser = async (req, res) => {
             password: req.body.password
         })
 
-        console.log(name, username , email , password);
+        console.log(name, username, email, password);
 
         const token = jtw.sign({
             id: newUser._id,
         }, process.env.JWT_SECRET)
+
+        const decoded = jtw.verify(token, process.env.JWT_SECRET)
+
+    
 
         res.cookie("token", token)
 
@@ -52,18 +56,18 @@ const createUser = async (req, res) => {
     }
 }
 
-// const getUser = async (req, res) => {
-//     try {
-//         const users = await authSchema.find()
-//         res.status(200).json({
-//             message: "user fetched!",
-//             users
-//         })
-//     } catch (error) {
-//         console.log(error, "error in getusers!");
+const getUser = async (req, res) => {
+    try {
+        const users = await authSchema.find()
+        res.status(200).json({
+            message: "user fetched!",
+            users
+        })
+    } catch (error) {
+        console.log(error, "error in getusers!");
 
-//     }
-// }
+    }
+}
 
 
 
