@@ -25,10 +25,7 @@ const createUser = async (req, res) => {
         console.log('------>', req.body);
 
         const newUser = await authSchema.create({
-            name: req.body.name,
-            username: req.body.username,
-            email: req.body.email,
-            password: req.body.password
+            name, username, email, password
         })
 
         console.log(name, username, email, password);
@@ -37,9 +34,15 @@ const createUser = async (req, res) => {
             id: newUser._id,
         }, process.env.JWT_SECRET)
 
+        if (!token) {
+            return res.json({
+                message: "unotherized!"
+            })
+        }
+
         const decoded = jtw.verify(token, process.env.JWT_SECRET)
 
-    
+
 
         res.cookie("token", token)
 
